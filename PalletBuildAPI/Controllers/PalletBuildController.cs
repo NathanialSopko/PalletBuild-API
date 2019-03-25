@@ -18,74 +18,74 @@ namespace PalletBuildAPI.Controllers
         public string CheckInUser([FromBody] StringModel value)
         {
             //using (SqlConnection con = new SqlConnection("Source=mti-dbs2;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
-            using (SqlConnection con = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;"))
-            {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_BADGE_DATA", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
+            //using (SqlConnection con = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;"))
+            //{
+            //    using (SqlCommand cmd = new SqlCommand("MTI.GET_BADGE_DATA", con))
+            //    {
+            //        cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@Badgeno", SqlDbType.VarChar).Value = value.stringValue;
+            //        cmd.Parameters.Add("@Badgeno", SqlDbType.VarChar).Value = value.stringValue;
 
-                    DataTable dataTable = new DataTable();
+            //        DataTable dataTable = new DataTable();
 
-                    dataTable.Load(cmd.ExecuteReader());
+            //        dataTable.Load(cmd.ExecuteReader());
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+            //        con.Open();
+            //        cmd.ExecuteNonQuery();
 
-                    var output = new StringBuilder();
+            //        var output = new StringBuilder();
 
-                    var columnsWidths = new int[dataTable.Columns.Count];
+            //        var columnsWidths = new int[dataTable.Columns.Count];
 
-                    // Get column widths
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        for (int i = 0; i < dataTable.Columns.Count; i++)
-                        {
-                            var length = row[i].ToString().Length;
-                            if (columnsWidths[i] < length)
-                                columnsWidths[i] = length;
-                        }
-                    }
+            //        // Get column widths
+            //        foreach (DataRow row in dataTable.Rows)
+            //        {
+            //            for (int i = 0; i < dataTable.Columns.Count; i++)
+            //            {
+            //                var length = row[i].ToString().Length;
+            //                if (columnsWidths[i] < length)
+            //                    columnsWidths[i] = length;
+            //            }
+            //        }
 
-                    // Get Column Titles
-                    for (int i = 0; i < dataTable.Columns.Count; i++)
-                    {
-                        var length = dataTable.Columns[i].ColumnName.Length;
-                        if (columnsWidths[i] < length)
-                            columnsWidths[i] = length;
-                    }
+            //        // Get Column Titles
+            //        for (int i = 0; i < dataTable.Columns.Count; i++)
+            //        {
+            //            var length = dataTable.Columns[i].ColumnName.Length;
+            //            if (columnsWidths[i] < length)
+            //                columnsWidths[i] = length;
+            //        }
 
-                    // Write Column titles
-                    for (int i = 0; i < dataTable.Columns.Count; i++)
-                    {
-                        var text = dataTable.Columns[i].ColumnName;
-                        output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-                    }
-                    output.Append("|\n" + new string('=', output.Length) + "\n");
+            //        // Write Column titles
+            //        for (int i = 0; i < dataTable.Columns.Count; i++)
+            //        {
+            //            var text = dataTable.Columns[i].ColumnName;
+            //            output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
+            //        }
+            //        output.Append("|\n" + new string('=', output.Length) + "\n");
 
-                    // Write Rows
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        for (int i = 0; i < dataTable.Columns.Count; i++)
-                        {
-                            var text = row[i].ToString();
-                            output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
-                        }
-                        output.Append("|\n");
-                    }
-                    return output.ToString();
-                }
-            }
-            return "";
+            //        // Write Rows
+            //        foreach (DataRow row in dataTable.Rows)
+            //        {
+            //            for (int i = 0; i < dataTable.Columns.Count; i++)
+            //            {
+            //                var text = row[i].ToString();
+            //                output.Append("|" + PadCenter(text, columnsWidths[i] + 2));
+            //            }
+            //            output.Append("|\n");
+            //        }
+            //        return output.ToString();
+            //    }
+            //}
+            return value.stringValue;
         }
 
-        private static string PadCenter(string text, int maxLength)
-        {
-            int diff = maxLength - text.Length;
-            return new string(' ', diff / 2) + text + new string(' ', (int)(diff / 2.0 + 0.5));
+        //private static string PadCenter(string text, int maxLength)
+        //{
+        //    int diff = maxLength - text.Length;
+        //    return new string(' ', diff / 2) + text + new string(' ', (int)(diff / 2.0 + 0.5));
 
-        }
+        //}
 
         [HttpPost, Route("CheckPalletData")]
         public string CheckPalletData([FromBody] PalletDataModel value)
@@ -110,7 +110,14 @@ namespace PalletBuildAPI.Controllers
             //        return returnParameter;
             //    }
             //}
+
             return value.Badge_ID;
+        }
+
+        [HttpGet, Route("CheckAPIWorking")]
+        public string CheckAPIWorking()
+        {
+            return "PalletBuild";
         }
     }
 }

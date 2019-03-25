@@ -11,4 +11,18 @@
     {
         public string stringValue { get; set; }
     }
+
+
+
+    //public class GetBadgeIDReturner
+    //{
+    //    public 
+    //}
+
+    public class GetPalletDataReturner
+    {
+        public bool success { get; set; }
+        public string error_code { get; set; }
+        public string error_text { get; set; }
+    }
 }
