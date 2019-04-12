@@ -18,7 +18,7 @@ namespace PalletBuildAPI.Controllers
         [HttpPost, Route("CheckInUser")]
         public string CheckInUser([FromBody] StringModel value)
         {
-            using(SqlConnection con = new SqlConnection("Server=mti-dbs2;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
+            using(SqlConnection con = new SqlConnection("Server=mti-dbs2.fgc.com;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
             {
                 using (SqlCommand cmd = new SqlCommand("MTI.GET_BADGE_DATA", con))
                 {
@@ -39,6 +39,26 @@ namespace PalletBuildAPI.Controllers
         [HttpPost, Route("CheckPalletData")]
         public string CheckPalletData([FromBody] PalletDataModel value)
         {
+
+            using (SqlConnection con = new SqlConnection("Server=mti-dbs2.fgc.com;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
+            {
+                using (SqlCommand cmd = new SqlCommand("MTI.GET_PALLET_SCAN", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@BadgeNo", SqlDbType.VarChar).Value = value.Badge_ID;
+                    cmd.Parameters.Add("@PalletID", SqlDbType.VarChar).Value = value.Pallet_ID;
+                    cmd.Parameters.Add("@ContID", SqlDbType.VarChar).Value = value.CONT_ID;
+                    cmd.Parameters.Add("@isIndia", SqlDbType.Int).Value = value.isIndia;
+                    con.Open();
+                    DataTable dt = new DataTable();
+                    dt.Load(cmd.ExecuteReader());
+                    con.Close();
+
+                    return JsonConvert.SerializeObject(dt);
+                    //var temp = JsonConvert.SerializeObject(dt);
+                    //return JsonConvert.DeserializeObject<ReturnBadgeModel>(temp).EmpName;
+                }
+            }
 
             //using (SqlConnection con = new SqlConnection(connectionString))
             //{
