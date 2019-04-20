@@ -26,18 +26,10 @@ namespace PalletBuildAPI.Models
         public string BadgeNo { get; set; }
         public string EmpName { get; set; }
     }
-
-
-
-    //public class GetBadgeIDReturner
-    //{
-    //    public 
-    //}
-
+    
     public class GetPalletDataReturner
     {
-        public bool success { get; set; }
-        public string error_code { get; set; }
-        public string error_text { get; set; }
+        public string errno { get; set; }
+        public string errtxt { get; set; }
     }
 }
