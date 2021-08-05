@@ -11,10 +11,14 @@ namespace PalletBuildAPI.Controllers
     [RoutePrefix("PalletBuild")]
     public class PalletBuildController : ApiController
     {
+        //SQL Connection Config
         private string ServerName { get; set; }
         private string InitialCatalog { get; set; }
         private string Username { get; set; }
         private string Password { get; set; }
+
+        //SQL Procedures Config
+        private string Schema { get; set; }
 
         public PalletBuildController()
         {
@@ -22,6 +26,8 @@ namespace PalletBuildAPI.Controllers
             InitialCatalog = ConfigurationManager.AppSettings["SQL.InitialCatalog"];
             Username = ConfigurationManager.AppSettings["SQL.Username"];
             Password = ConfigurationManager.AppSettings["SQL.Password"];
+
+            Schema = ConfigurationManager.AppSettings["SQL.Schema"];
         }
 
         [HttpPost, Route("CheckInUser")]
@@ -29,7 +35,7 @@ namespace PalletBuildAPI.Controllers
         {
             using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_BADGE_DATA", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_BADGE_DATA", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@BadgeNo", SqlDbType.VarChar).Value = value.stringValue;
@@ -56,7 +62,7 @@ namespace PalletBuildAPI.Controllers
         {
             using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_PALLET_SCAN", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_PALLET_SCAN", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@BadgeNo", SqlDbType.VarChar).Value = value.Badge_ID;
@@ -83,7 +89,7 @@ namespace PalletBuildAPI.Controllers
         {
             using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_PALLET_COUNT", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_PALLET_COUNT", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@PalletID", SqlDbType.VarChar).Value = value.Pallet_ID;
