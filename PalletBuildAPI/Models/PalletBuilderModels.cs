@@ -10,6 +10,12 @@ namespace PalletBuildAPI.Models
         public int isIndia { get; set; }
     }
 
+    public class PalletCountDataModel
+    {
+        public string Pallet_ID { get; set; }
+        public int isIndia { get; set; }
+    }
+
     public class StringModel
     {
         public string stringValue { get; set; }
@@ -32,4 +38,12 @@ namespace PalletBuildAPI.Models
         public string errno { get; set; }
         public string errtxt { get; set; }
     }
+
+    public class GetPalletCountReturner
+    {
+        public int Error { get; set; }
+        public int Count { get; set; }
+    }
+
+
 }
