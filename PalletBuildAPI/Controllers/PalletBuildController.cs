@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PalletBuildAPI.Models;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Http;
@@ -10,12 +11,31 @@ namespace PalletBuildAPI.Controllers
     [RoutePrefix("PalletBuild")]
     public class PalletBuildController : ApiController
     {
+        //SQL Connection Config
+        private string ServerName { get; set; }
+        private string InitialCatalog { get; set; }
+        private string Username { get; set; }
+        private string Password { get; set; }
+
+        //SQL Procedures Config
+        private string Schema { get; set; }
+
+        public PalletBuildController()
+        {
+            ServerName = ConfigurationManager.AppSettings["SQL.ServerName"];
+            InitialCatalog = ConfigurationManager.AppSettings["SQL.InitialCatalog"];
+            Username = ConfigurationManager.AppSettings["SQL.Username"];
+            Password = ConfigurationManager.AppSettings["SQL.Password"];
+
+            Schema = ConfigurationManager.AppSettings["SQL.Schema"];
+        }
+
         [HttpPost, Route("CheckInUser")]
         public string CheckInUser([FromBody] StringModel value)
         {
-            using (SqlConnection con = new SqlConnection("Server=mti-dbs2.fgc.com;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
+            using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_BADGE_DATA", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_BADGE_DATA", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@BadgeNo", SqlDbType.VarChar).Value = value.stringValue;
@@ -40,9 +60,9 @@ namespace PalletBuildAPI.Controllers
         [HttpPost, Route("CheckPalletData")]
         public string CheckPalletData([FromBody] PalletDataModel value)
         {
-            using (SqlConnection con = new SqlConnection("Server=mti-dbs2.fgc.com;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
+            using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_PALLET_SCAN", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_PALLET_SCAN", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@BadgeNo", SqlDbType.VarChar).Value = value.Badge_ID;
@@ -67,9 +87,9 @@ namespace PalletBuildAPI.Controllers
         [HttpPost, Route("GetTotalScanCount")]
         public string GetTotalScanCount([FromBody] PalletCountDataModel value)
         {
-            using (SqlConnection con = new SqlConnection("Server=mti-dbs2.fgc.com;Initial Catalog=MEDW;User ID=scanner;Password=scanner"))
+            using (SqlConnection con = new SqlConnection($"Server={ServerName};Initial Catalog={InitialCatalog};User ID={Username};Password={Password}"))
             {
-                using (SqlCommand cmd = new SqlCommand("MTI.GET_PALLET_COUNT", con))
+                using (SqlCommand cmd = new SqlCommand($"{Schema}.GET_PALLET_COUNT", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@PalletID", SqlDbType.VarChar).Value = value.Pallet_ID;
@@ -92,7 +112,7 @@ namespace PalletBuildAPI.Controllers
         [HttpGet, Route("CheckAPIWorking")]
         public string CheckAPIWorking()
         {
-            return "PalletBuild";
+            return  "PalletBuild API v:1.1";
         }
     }
 }
