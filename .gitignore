@@ -260,3 +260,7 @@ paket-files/
 __pycache__/
 *.pyc
 *.zip
+
+
+Web.Debug.config
+Web.Release.config
